@@ -1,73 +1,92 @@
 import java.util.Scanner;
 
-public class Triangle
-{
-    static double Area;
-
-    static double function(double a, double b , double c){
-        double p = a+b+c;
-        return p;
-    }
-    public static void main(String[] args) throws Exception
-    {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the first side of the triangle: ");
-        double a = sc.nextDouble();
-        System.out.println("Enter the other side of the triangle: ");
-        double b = sc.nextDouble();
-        System.out.println("Enter the third side of the triangle: ");
-        double c = sc.nextDouble();
+public class Triangle {
+    private static final Scanner SCANNER = new Scanner(System.in);
+    private static final String FIRST_SIDE_TRIANGLE = "Enter the first side of the triangle: ";
+    private static final String TWO_SIDE_TRIANGLE = "Enter the other side of the triangle: ";
+    private static final String THIRD_SIDE_TRIANGLE = "Enter the third side of the triangle: ";
+    private static final String TRIANGLE_DOES_NOT_EXIT = "The triangle doesn't exist.";
+    private static final String AREA_TRIANGLE = "The area is equal to: ";
+    private static final String TRIANGLE_PERIMETER = "The perimeter is: ";
+    private static final String FIRST_ANGLE_TRIANGLE = "Angle 1 is: ";
+    private static final String TWO_ANGLE_TRIANGLE = "Angle 2 is: ";
+    private static final String THIRD_ANGLE_TRIANGLE = "Angle 3 is: ";
 
 
-        System.out.println("Please select an action: ");
-        System.out.println("1.   Is it a triangle?");
-        System.out.println("2.   What type of triangle?");
-        System.out.println("3.   Area of the triangle");
-        System.out.println("4.   Perimeter of a triangle");
-        System.out.println("5.   Angles of a triangle");
-        System.out.print("Your choice: ");
+    public static void main(String[] args) {
+        double sideA = side_Of_A_Triangle(FIRST_SIDE_TRIANGLE);
+        double sideB = side_Of_A_Triangle(TWO_SIDE_TRIANGLE);
+        double sideC = side_Of_A_Triangle(THIRD_SIDE_TRIANGLE);
 
-        int userChoose = sc.nextInt();
-
-        switch (userChoose) {
-
-            case 1:{
-                if (a + b > c && a + c > b && b + c > a)
-                    System.out.println("The triangle exists.");
-                else
-                    System.out.println("The triangle doesn't exist.");
-            }break;
-            case 2:{
-                if(a<=0 || b<=0 || c<=0)
-                    System.out.println("InvalidInput");
-                else if(a>=(b+c) || c>=(b+a) || b>=(a+c))
-                    System.out.println("Not a Triangle");
-                else if(a==b && b==c)
-                    System.out.println("Equilateral Triangle");
-                else if(((a*a)+(b*b))==(c*c) || ((a*a)+(c*c))==(b*b) || ((c*c)+(b*b))==(a*a))
-                    System.out.println("Right Triangle");
-                else if(a!=b && b!=c && c!=a)
-                    System.out.println("Scalene Triangle");
-                else if(a==b || c==a || c==b)
-                    System.out.println("Isosceles Triangle");
-            } break;
-            case 3: {
-                double s = (a + b + c) / 2;
-                Area = Math.sqrt(s*(s-a)*(s-b)*(s-c));
-                System.out.println("The area is equal to: " + Area);
-            } break;
-            case 4: {
-                System.out.println("The perimeter is: "+function(a, b, c));
-            }
-            case 5: {
-                double angleA = Math.acos((b * b + c * c - a * a) / (2 * b * c)) * 180 / Math. PI;
-                double angleB = Math.acos((a * a + c * c - b * b) / (2 * a * c)) * 180 / Math. PI;
-                double angleC = Math.acos((a * a + b * b - c * c) / (2 * a * b)) * 180 / Math. PI;
-
-                System.out.println("Angle 1 is: " + angleA);
-                System.out.println("Angle 2 is: " + angleB);
-                System.out.println("Angle 3 is: " + angleC);
-            }
+        if (!rightTriangle(sideA,sideB,sideC)){
+            System.out.println(TRIANGLE_DOES_NOT_EXIT);
         }
+
+        typeTriangle(sideA,sideB,sideC);
+
+        System.out.println(AREA_TRIANGLE + areaTriangle(sideA,sideB,sideC));
+
+        System.out.println(TRIANGLE_PERIMETER + perimeter(sideA, sideB, sideC));
+
+        angles(sideA,sideB,sideC);
+            double angleA = angles(sideA,sideB,sideC);
+            double angleB = angles(sideB,sideA,sideC);
+            double angleC = angles(sideC,sideB,sideA);
+
+
+            System.out.println(FIRST_ANGLE_TRIANGLE + angleA);
+            System.out.println(TWO_ANGLE_TRIANGLE + angleB);
+            System.out.println(THIRD_ANGLE_TRIANGLE + angleC);
+
+
+    }
+
+    private static double side_Of_A_Triangle(String requestMessage) {
+        System.out.println(requestMessage);
+        return SCANNER.nextDouble();
+    }
+
+    private static boolean typeTriangle(double sideA, double sideB, double sideC) {
+        if (sideA == sideB && sideB == sideC){
+            System.out.println("Equilateral Triangle");
+            return Boolean.TRUE;
+        }
+        else if (((sideA * sideA) + (sideB * sideB)) == (sideC * sideC)
+                || ((sideA * sideA) + (sideC * sideC)) == (sideB * sideB)
+                || ((sideC * sideC) + (sideB * sideB)) == (sideA * sideA)){
+            System.out.println("Right Triangle");
+            return Boolean.TRUE;
+        }
+        else if (sideA != sideB && sideB != sideC && sideC != sideA){
+            System.out.println("Scalene Triangle");
+            return Boolean.TRUE;
+        }
+        else if (sideA == sideB || sideC == sideA || sideC == sideB){
+            System.out.println("Isosceles Triangle");
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
+    }
+
+    private static boolean rightTriangle(double sideA, double sideB, double sideC) {
+        if (sideA + sideB > sideC && sideA + sideC > sideB && sideB + sideC > sideA){
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
+    }
+
+    private static double areaTriangle(double sideA, double sideB, double sideC) {
+        double half_Triangle = (sideA + sideB + sideC) / 2;
+        return Math.sqrt(half_Triangle * (half_Triangle - sideA) * (half_Triangle - sideB) * (half_Triangle - sideC));
+    }
+
+    private static double perimeter(double sideA, double sideB, double sideC) {
+        return sideA + sideB + sideC;
+    }
+
+    private static double angles(double sideA, double sideB, double sideC) {
+        return Math.acos((sideB * sideB + sideC * sideC - sideA * sideA) / (2 * sideB * sideC)) * 180 / Math.PI;
     }
 }
